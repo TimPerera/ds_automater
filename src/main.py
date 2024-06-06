@@ -96,6 +96,7 @@ def main(file_path, folder_name, project_type, git, cleanup, verbose):
         os.mkdir(full_fpath)
         logger.debug(f'Created new file path {full_fpath}.')
     os.chdir(full_fpath) # navigate to defined file path
+    logger.debug(f'Full fpath is {full_fpath}')
     
     ####
     # Environment Setup
@@ -105,15 +106,18 @@ def main(file_path, folder_name, project_type, git, cleanup, verbose):
         subprocess.run([sys.executable,'-m','venv','.venv'])
         logger.debug('Virtual env created.')
     venv_path = os.path.join(full_fpath, '.venv')
+    logger.debug(f'Venv path is {venv_path}')
     if os.name == 'nt':
         activate_script = os.path.join(venv_path,'Scripts','activate')
         subprocess.run(f"{activate_script} && pip install  {' '.join(PACKAGES)}",shell=True)
         # subprocess.run(f'{activate_script} && jupyter notebook --generate-config')
     elif os.name=='posix':
         activate_script = os.path.join(venv_path, 'bin','activate')
-        subprocess.run(f"source {activate_script} && \
+        logger.debug(f'Activate script is {activate_script}')
+        subprocess.run(f"source '{activate_script}' && \
                        python -m pip install --upgrade pip && \
                        pip install {' '.join(PACKAGES)}",shell=True)
+        logger.debug('Completed installing packages.')
         # if type=='jupyter-notebook':
         #     subprocess.run(f'jupyter notebook --generate-config')
     if git:
