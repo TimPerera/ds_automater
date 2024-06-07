@@ -18,6 +18,7 @@ import nbformat as nbf
 PACKAGES = ['numpy','pandas',
             'openpyxl',
             'scikit-learn',
+            'statsmodels'
             'matplotlib','seaborn',
             'notebook']
 
