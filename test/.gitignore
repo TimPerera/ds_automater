@@ -1,0 +1,7 @@
+*.txt
+*.csv
+*.xlsx
+*.xls
+*.ipynb_checkpoints
+*.vscode
+.git

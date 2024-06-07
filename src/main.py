@@ -18,7 +18,7 @@ import nbformat as nbf
 PACKAGES = ['numpy','pandas',
             'openpyxl',
             'scikit-learn',
-            'statsmodels'
+            'statsmodels',
             'matplotlib', 'seaborn',
             'notebook']
 
@@ -126,7 +126,9 @@ def main(file_path, folder_name, project_type, git, cleanup, verbose):
     ###
     # setup virtual environment
     if os.path.exists(full_fpath):
-        subprocess.run([sys.executable,'-m','venv','.venv'])
+        subprocess.run([sys.executable,'-m','venv','.venv'],
+                       stdout=subprocess.DEVNULL,
+                       stderr=subprocess.STDOUT)
         logger.debug('Virtual env created.')
     venv_path = os.path.join(full_fpath, '.venv')
     logger.debug(f'Venv path is {venv_path}')
@@ -139,12 +141,17 @@ def main(file_path, folder_name, project_type, git, cleanup, verbose):
         logger.debug(f'Activate script is {activate_script}')
         subprocess.run(f"source '{activate_script}' && \
                        python -m pip install --upgrade pip && \
-                       pip install {' '.join(PACKAGES)}",shell=True)
+                       pip install {' '.join(PACKAGES)}",shell=True
+                    #    stdout=subprocess.DEVNULL,
+                    #    stderr=subprocess.STDOUT
+                       )
         logger.debug('Completed installing packages.')
         # if type=='jupyter-notebook':
         #     subprocess.run(f'jupyter notebook --generate-config')
     if git:
-        subprocess.run(['git','init'])
+        subprocess.run(['git','init'],
+                       stdout=subprocess.DEVNULL,
+                       stderr=subprocess.STDOUT)
         logger.info('Instantiated git')
     ####
     # File creations.
@@ -171,6 +178,7 @@ def main(file_path, folder_name, project_type, git, cleanup, verbose):
                       \nimport matplotlib.pyplot as plt\
                       \nimport seaborn as sns')
         logger.debug('Created python file.')
+    logger.debug('Completed setting up Environment.')
 
 if __name__ == '__main__':
     logging.basicConfig(
