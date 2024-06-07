@@ -19,7 +19,7 @@ PACKAGES = ['numpy','pandas',
             'openpyxl',
             'scikit-learn',
             'statsmodels'
-            'matplotlib','seaborn',
+            'matplotlib', 'seaborn',
             'notebook']
 
 ignore_file_types = ['*.txt','*.csv','*.xlsx','*.xls','*.ipynb_checkpoints','*.vscode','.git']
@@ -70,6 +70,28 @@ def safe_delete(file_path):
                 os.remove(os.path.join(file_path, file)) 
         os.rmdir(file_path)               
         logger.info(f'Removed directory at {file_path}')
+
+def create_jupyter():
+    """
+    Creates new jupyter notebook. 
+    Args:
+        None
+    Returns:
+        None
+    """
+    nb = nbf.v4.new_notebook()
+    cells = [
+        nbf.v4.new_markdown_cell('# Solution Notebook'),
+        nbf.v4.new_code_cell('import numpy as np\
+                             \nimport pandas as pd\
+                             \nimport matplotlib.pyplot as plt\
+                             \nimport seaborn as sns')
+    ]
+    nb['cells'].extend(cells)
+    with open('solution.ipynb','w') as file:
+        nbf.write(nb, file)
+    logger.debug('Created jupyter notebook.')
+
 
 def main(file_path, folder_name, project_type, git, cleanup, verbose):
     """Main app logic. Sets up environment for data science project. 
@@ -141,18 +163,13 @@ def main(file_path, folder_name, project_type, git, cleanup, verbose):
         file.write('\n'.join(ignore_file_types))
 
     if project_type == 'jupyter-notebook':
-        nb = nbf.v4.new_notebook()
-        cells = [
-            nbf.v4.new_markdown_cell('# Solution Notebook'),
-            nbf.v4.new_code_cell('import numpy as np\nimport pandas as pd')
-        ]
-        nb['cells'].extend(cells)
-        with open('solution.ipynb','w') as file:
-            nbf.write(nb, file)
-        logger.debug('Created jupyter notebook.')
+        create_jupyter()
     elif project_type == 'python':
         with open('solution.py','w') as file:
-            file.write('import pandas as pd\nimport numpy as np')
+            file.write('import numpy as np\
+                      \nimport pandas as pd\
+                      \nimport matplotlib.pyplot as plt\
+                      \nimport seaborn as sns')
         logger.debug('Created python file.')
 
 if __name__ == '__main__':
